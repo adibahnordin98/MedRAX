@@ -58,7 +58,10 @@ def initialize_agent(
             cache_dir=model_dir, device=device
         ),
         "XRayPhraseGroundingTool": lambda: XRayPhraseGroundingTool(
-            cache_dir=model_dir, temp_dir=temp_dir, load_in_8bit=True, device=device
+            cache_dir=model_dir,
+            temp_dir=temp_dir,
+            load_in_8bit=True,
+            device=device,
         ),
         "ChestXRayGeneratorTool": lambda: ChestXRayGeneratorTool(
             model_path=f"{model_dir}/roentgen", temp_dir=temp_dir, device=device
