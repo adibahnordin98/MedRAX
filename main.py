@@ -106,10 +106,10 @@ if __name__ == "__main__":
         "ImageVisualizerTool",
         "DicomProcessorTool",
         "ChestXRayClassifierTool",
-        "ChestXRaySegmentationTool",
+        # "ChestXRaySegmentationTool",
         "ChestXRayReportGeneratorTool",
-        "XRayVQATool",
-        "LlavaMedTool",
+        # "XRayVQATool",
+        # "LlavaMedTool",
         "XRayPhraseGroundingTool",
         # "ChestXRayGeneratorTool",
     ]
