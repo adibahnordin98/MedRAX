@@ -4,6 +4,7 @@ import gradio as gr
 from pathlib import Path
 import time
 import shutil
+import numpy as np
 from typing import AsyncGenerator, List, Optional, Tuple
 from gradio import ChatMessage
 
@@ -146,7 +147,12 @@ class ChatInterface:
                     elif "execute" in event:
                         for message in event["execute"]["messages"]:
                             tool_name = message.name
-                            tool_result = eval(message.content)[0]
+                            # Create a safe namespace for eval() that includes numpy
+                            eval_namespace = {
+                                'np': np,
+                                '__builtins__': __builtins__,
+                            }
+                            tool_result = eval(message.content, eval_namespace)[0]
 
                             if tool_result:
                                 metadata = {"title": f"🖼️ Image from tool: {tool_name}"}
@@ -176,12 +182,16 @@ class ChatInterface:
                             yield chat_history, self.display_file_path, ""
 
         except Exception as e:
+            import traceback
+            error_details = f"❌ Error: {str(e)}\n\nTraceback:\n{traceback.format_exc()}"
+            print(error_details)  # This will help you see exactly where the error occurs
             chat_history.append(
                 ChatMessage(
-                    role="assistant", content=f"❌ Error: {str(e)}", metadata={"title": "Error"}
+                    role="assistant", content=error_details, metadata={"title": "Error"}
                 )
             )
-            yield chat_history, self.display_file_path
+            # FIXED: Added the missing third return value (empty string for textbox)
+            yield chat_history, self.display_file_path, ""
 
 
 def create_demo(agent, tools_dict):
